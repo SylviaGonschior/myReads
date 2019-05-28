@@ -3,9 +3,15 @@ import {Link} from 'react-router-dom';
 import * as BooksAPI from "./BooksAPI";
 import BookCategory from './BookCategory';
 import './App.css';
+import PropTypes from 'prop-types';
 
 class Search extends Component {
 
+    static propTypes = {
+        books: PropTypes.array.isRequired,
+        changeCategory: PropTypes.func.isRequired
+
+    };
 
     constructor(props) {
         super(props);
@@ -13,7 +19,7 @@ class Search extends Component {
             searchTerm: "",
             searchBooksResults: []
         };
-    }
+    };
 
     updateSearchTerm = (event) => {
         this.setState({
@@ -24,7 +30,7 @@ class Search extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (this.state.searchTerm !== prevState.searchTerm) {
             if (this.state.searchTerm === "") {
-                this.setState({searchBooksResults: []})
+                this.setState({searchBooksResults: []});
                 return
             }
             BooksAPI.search(this.state.searchTerm)
@@ -36,7 +42,7 @@ class Search extends Component {
                     console.log('error', err);
                 });
         }
-    }
+    };
 
     render() {
 
@@ -48,7 +54,6 @@ class Search extends Component {
             changeCategory,
             books
         } = this.props;
-
 
         return (
 

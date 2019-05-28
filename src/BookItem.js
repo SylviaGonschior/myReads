@@ -1,14 +1,22 @@
 import React, {Component} from 'react';
 import "./App.css";
+import PropTypes from 'prop-types';
 
 class BookItem extends Component {
+
+    static propTypes = {
+        book: PropTypes.object.isRequired,
+        books: PropTypes.array.isRequired,
+        changeCategory: PropTypes.func.isRequired
+
+    };
 
     constructor(props) {
         super(props);
         this.state = {
             shelf: ""
         };
-    }
+    };
 
     componentDidMount() {
 
@@ -19,7 +27,8 @@ class BookItem extends Component {
         if (book.shelf) {
             this.setState({ shelf: book.shelf });
         }
-    }
+    };
+
     componentDidUpdate(prevProps, prevState) {
 
         const {
@@ -34,7 +43,7 @@ class BookItem extends Component {
         if (shelf !== prevState.shelf) {
             changeCategory(book, shelf);
         }
-    }
+    };
 
     setShelf = (event) => {
         this.setState({ shelf: event.target.value });

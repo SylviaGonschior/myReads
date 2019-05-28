@@ -28,7 +28,6 @@ class BooksApp extends React.Component {
                         this.setState({books});
                     })
             })
-
     };
 
     toggleHover = () => {
@@ -106,7 +105,6 @@ class BooksApp extends React.Component {
                                <div className="open-search">
                                    <Link to="/search">
                                        <button
-                                           className="open-search"
                                            style={this.buttonStyle()}
                                            onMouseEnter={this.toggleHover}
                                            onMouseLeave={this.toggleHover}
