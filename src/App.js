@@ -1,24 +1,26 @@
 import React from 'react';
 import * as BooksAPI from './BooksAPI';
 import './App.css';
-import BookShelf from './BookShelf';
-import {Route} from 'react-router-dom';
+import BookCategory from './BookCategory';
+import {Route, Link} from 'react-router-dom';
+import Search from './Search';
 
 class BooksApp extends React.Component {
     state = {
-        books: []
+        books: [],
+        hover: false
     };
 
     componentDidMount() {
         BooksAPI.getAll()
-            .then((books) => {
-                this.setState(() => ({
+            .then((books) =>
+                this.setState({
                     books
-                }))
-            })
+                })
+            )
     };
 
-    changeBookShelf = (book, shelf) => {
+    changeCategory = (book, shelf) => {
         BooksAPI.update(book, shelf)
             .then(() => {
                 BooksAPI.getAll()
@@ -27,6 +29,18 @@ class BooksApp extends React.Component {
                     })
             })
 
+    };
+
+    toggleHover = () => {
+        this.setState({hover: !this.state.hover})
+    };
+
+    buttonStyle = () => {
+        if (this.state.hover) {
+            return {backgroundColor: "rgb(0, 102, 0)"}
+        } else {
+            return {backgroundColor: "grey"}
+        }
     };
 
     render() {
@@ -38,9 +52,22 @@ class BooksApp extends React.Component {
         const currentlyReading = books.filter((book) => book.shelf === "currentlyReading");
         const wantToRead = books.filter((book) => book.shelf === "wantToRead");
         const read = books.filter((book) => book.shelf === "read");
+        const sortedBooks = books;
 
         return (
             <div className="app">
+                <Route
+                    path="/search"
+                    render={() => (
+                            <Search
+                                changeCategory={(book, shelf) =>
+                                    this.changeCategory(book, shelf)
+                                }
+                                books={sortedBooks}
+                            />
+                    )}
+                />
+
                 <Route exact path="/"
                        render={() => (
                            <div className="list-books">
@@ -48,32 +75,44 @@ class BooksApp extends React.Component {
                                    <h1>MyReads</h1>
                                </div>
                                <div className="list-books-content">
+                                   <div>
+                                       <BookCategory
+                                           bookList={currentlyReading}
+                                           categoryTitle={"Currently Reading"}
+                                           changeCategory={(book, shelf) =>
+                                               this.changeCategory(book, shelf)
+                                           }
+                                           books={sortedBooks}
+                                       />
+                                       <BookCategory
+                                           bookList={wantToRead}
+                                           categoryTitle={"Want to Read"}
+                                           changeCategory={(book, shelf) =>
+                                               this.changeCategory(book, shelf)
+                                           }
+                                           books={sortedBooks}
+                                       />
+                                       <BookCategory
+                                           bookList={read}
+                                           categoryTitle={"Read"}
+                                           changeCategory={(book, shelf) =>
+                                               this.changeCategory(book, shelf)
+                                           }
+                                           books={sortedBooks}
+                                       />
 
-                                   <BookShelf
-                                       bookList={currentlyReading}
-                                       shelfTitle={"Currently Reading"}
-                                       changeBookShelf={(book, shelf) =>
-                                           this.changeBookShelf(book, shelf)
-                                       }
-                                       booksWithShelf={books}
-                                   />
-                                   <BookShelf
-                                       bookList={wantToRead}
-                                       shelfTitle={"Want to Read"}
-                                       changeBookShelf={(book, shelf) =>
-                                           this.changeBookShelf(book, shelf)
-                                       }
-                                       booksWithShelf={books}
-                                   />
-                                   <BookShelf
-                                       bookList={read}
-                                       shelfTitle={"Read"}
-                                       changeBookShelf={(book, shelf) =>
-                                           this.changeBookShelf(book, shelf)
-                                       }
-                                       booksWithShelf={books}
-                                   />
-
+                                   </div>
+                               </div>
+                               <div className="open-search">
+                                   <Link to="/search">
+                                       <button
+                                           className="open-search"
+                                           style={this.buttonStyle()}
+                                           onMouseEnter={this.toggleHover}
+                                           onMouseLeave={this.toggleHover}
+                                       >
+                                       </button>
+                                   </Link>
                                </div>
                            </div>
                        )}
