@@ -4,6 +4,7 @@ import './App.css';
 import BookCategory from './BookCategory';
 import {Route, Link} from 'react-router-dom';
 import Search from './Search';
+import {createHashHistory} from "history";
 
 class BooksApp extends React.Component {
     state = {
@@ -34,12 +35,20 @@ class BooksApp extends React.Component {
         this.setState({hover: !this.state.hover})
     };
 
-    buttonStyle = () => {
-        if (this.state.hover) {
-            return {backgroundColor: "rgb(0, 102, 0)"}
-        } else {
-            return {backgroundColor: "grey"}
-        }
+    changeCategorySearch = (book, shelf) => {
+        BooksAPI.update(book, shelf)
+            .then(() => {
+                BooksAPI.getAll()
+                    .then((books) => {
+                        this.setState({books});
+                    })
+                    .then(this.onNavigate)
+            })
+    };
+
+    onNavigate() {
+        const history = createHashHistory();
+        history.goBack();
     };
 
     render() {
@@ -60,7 +69,7 @@ class BooksApp extends React.Component {
                     render={() => (
                             <Search
                                 changeCategory={(book, shelf) =>
-                                    this.changeCategory(book, shelf)
+                                    this.changeCategorySearch(book, shelf)
                                 }
                                 books={sortedBooks}
                             />
@@ -105,7 +114,7 @@ class BooksApp extends React.Component {
                                <div className="open-search">
                                    <Link to="/search">
                                        <button
-                                           style={this.buttonStyle()}
+                                           className={this.state.hover ? "open-search hover" : "open-search"}
                                            onMouseEnter={this.toggleHover}
                                            onMouseLeave={this.toggleHover}
                                        >

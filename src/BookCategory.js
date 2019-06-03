@@ -35,7 +35,8 @@ class BookCategory extends Component {
                                     key={index}
                                     book={book}
                                     books={books}
-                                    changeCategory={changeCategory}/>
+                                    changeCategory={changeCategory}
+                                />
                             );
                         })
                         }

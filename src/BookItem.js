@@ -25,7 +25,8 @@ class BookItem extends Component {
         } = this.props;
 
         if (book.shelf) {
-            this.setState({ shelf: book.shelf });
+            this.setState({shelf: book.shelf});
+
         }
     };
 
@@ -41,19 +42,22 @@ class BookItem extends Component {
         } = this.state;
 
         if (shelf !== prevState.shelf) {
-            changeCategory(book, shelf);
+                changeCategory(book, shelf);
         }
     };
 
+
     setShelf = (event) => {
-        this.setState({ shelf: event.target.value });
+
+        this.setState({shelf: event.target.value});
     };
+
 
     setValue = () => {
 
         const {
             books,
-            book,
+            book
         } = this.props;
 
         let isValueSet = books.find(b => b.id === book.id);
@@ -71,7 +75,6 @@ class BookItem extends Component {
         const {
             book
         } = this.props;
-
 
         const bookUrl = book.imageLinks ? book.imageLinks.thumbnail : "";
 
